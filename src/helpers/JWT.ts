@@ -36,8 +36,15 @@ export class JWTHelper {
         return token;
     }
 
-    async verify() {
-        
+    async verify(token: string) {
+        let error, payload;
+        await jwt.verify(token, this._secretKey, (err, decoded) => {
+            error = err;
+            payload = decoded;
+        });
+        if (error)
+            throw error;
+        return payload;
     }
 
     static async hash(pass: string) {
