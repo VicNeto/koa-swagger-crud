@@ -29,6 +29,6 @@ app.use(apiRouter.allowedMethods());
 
 app.on('error', err => {
     console.error('server error', err);
-  });
+});
 
 export default app;
