@@ -28,23 +28,43 @@ export class UserController {
         ctx.body = res.data || {};
     }
 
-    @request('GET', '/users/:id')
-    @summary('Bridgefy users detail')
-    @description('Get the detail of a user query by id')
-    @responses(commonResponse)
-    async show(ctx: Context) {
-        const res = await this._service.index(ctx.params.id);
-        ctx.status = res.status || 200;
-        ctx.body = res.data || {};
-    }
-
     @request('POST', '/users')
-    @summary('Create Bridgefy user')
+    @summary('Create user')
     @description('Create a new bridgefy user.')
     @responses(commonResponse)
     async create(ctx: Context) {
         const res = await this._service.store(ctx.request.body);
         ctx.status = res.status || 201;
+        ctx.body = res.data || {};
+    }
+
+    @request('GET', '/users/:id')
+    @summary('Get user detail')
+    @description('Get the detail of a user query by id')
+    @responses(commonResponse)
+    async show(ctx: Context) {
+        const res = await this._service.show(ctx.params.id);
+        ctx.status = res.status || 200;
+        ctx.body = res.data || {};
+    }
+
+    @request('PUT', '/users/:id')
+    @summary('Update user')
+    @description('Get the detail of a user query by id')
+    @responses(commonResponse)
+    async update(ctx: Context) {
+        const res = await this._service.update(ctx.params.id, ctx.request.body);
+        ctx.status = res.status || 200;
+        ctx.body = res.data || {};
+    }
+
+    @request('DELETE', '/users/:id')
+    @summary('Delete user')
+    @description('Delete a user query by id')
+    @responses(commonResponse)
+    async delete(ctx: Context) {
+        const res = await this._service.destroy(ctx.params.id);
+        ctx.status = res.status || 200;
         ctx.body = res.data || {};
     }
 }
