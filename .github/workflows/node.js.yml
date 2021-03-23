@@ -22,21 +22,21 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
+      env:
+        DB_HOST: ${{ secrets.DB_HOST }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        DB_SCHEMA: ${{ secrets.DB_SCHEMA }}
+        DB_USER: ${{ secrets.DB_USER }}
+        PORT: ${{ secrets.PORT }}
+        AUTH_ISSUER: ${{ secrets.AUTH_ISSUER }}
+        AUTH_DOMAIN: ${{ secrets.AUTH_DOMAIN }}
+        AUTH_AUDIENCE: ${{ secrets.AUTH_AUDIENCE }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        TEST_USER: ${{ secrets.TEST_USER }}
+        TEST_PASS: ${{ secrets.TEST_PASS }}
+        TEST_ID: ${{ secrets.TEST_ID }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - env:
-      DB_HOST: ${{ secrets.DB_HOST }}
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      DB_SCHEMA: ${{ secrets.DB_SCHEMA }}
-      DB_USER: ${{ secrets.DB_USER }}
-      PORT: ${{ secrets.PORT }}
-      AUTH_ISSUER: ${{ secrets.AUTH_ISSUER }}
-      AUTH_DOMAIN: ${{ secrets.AUTH_DOMAIN }}
-      AUTH_AUDIENCE: ${{ secrets.AUTH_AUDIENCE }}
-      SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      TEST_USER: ${{ secrets.TEST_USER }}
-      TEST_PASS: ${{ secrets.TEST_PASS }}
-      TEST_ID: ${{ secrets.TEST_ID }}
     - run: npm i
     - run: npm test
