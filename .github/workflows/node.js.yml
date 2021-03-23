@@ -25,6 +25,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - run: npm i
     - run: npm test
       env:
         TEST_ID: 605a1a5b567ba63cb39c2569
