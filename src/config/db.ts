@@ -27,7 +27,7 @@ export class MongoConfig {
 
     getStrConnection():string {
         let connectionString = 'mongodb+srv://';
-        connectionString += (this.user ? (this.user + ':' + this.password + '@') : '') + this.host + '/' + this.schema + 'retryWrites=true&w=majority';
+        connectionString += (this.user ? (this.user + ':' + this.password + '@') : '') + this.host + '/' + this.schema;
         return connectionString;
     }
 
