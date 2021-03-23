@@ -1,6 +1,6 @@
-import * as Router from 'koa-router';
 import { SwaggerRouter } from 'koa-swagger-decorator';
-import { UserController } from '../users/controller';
+import { UserController } from '../controllers/UserController';
+import { SignController } from '../controllers/SignController';
 
 const koaOpts = {
     prefix: '/api/v1',
@@ -20,10 +20,12 @@ apiRouter.swagger();
 apiRouter.get('/version', async (ctx) => {
     ctx.body = {version:'1.0.0'};
 });
+
 apiRouter.get('/ping', async (ctx) => {
     ctx.body = "Pong";
 });
 
 apiRouter.map(UserController, { doValidation: false });
+apiRouter.map(SignController, { doValidation: false });
 
 export { apiRouter };

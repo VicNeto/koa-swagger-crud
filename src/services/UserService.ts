@@ -1,14 +1,16 @@
-import { User } from './model';
+import { User } from '../models/User';
 import * as mongoose from 'mongoose';
+import { JWTHelper as jwt } from '../helpers/JWT';
 
 export class UserService {
     constructor() {}
 
     async all() {
         let users;
-        await User.find({}).then(docs => {
+        await User.find({removed: null}).then(docs => {
             users = docs;
         }).catch(err => console.log(err) );
+        users = users.map(user => this.parseResponse(user));
 
         return {status: 200, data: {data: users || {}}};
     }
@@ -26,12 +28,13 @@ export class UserService {
                 }
             };
 
-        return {status: 200, data: {data: response || {}}};
+        return {status: 200, data: {data: this.parseResponse(response) || {}}};
     }
 
     async store(data) {
+        data.hash = await jwt.hash(data.password);
         const user = new User(data);
-        let response;
+        let response, error;
         
         await user.save()
             .then(doc => {
@@ -39,17 +42,18 @@ export class UserService {
             })
             .catch(err => {
                 console.log(err);
+                error = err;
             });
         if (!response) {
             return {
                 status: 400,
                 data: {
-                    "error": { "message": "Database error", "code": 400 }
+                    "error": { "message": "Bad request", "code": 400 , "data": error}
                 }
             };
         }
 
-        return {status: 201, data: {data: response}};
+        return {status: 201, data: {data: this.parseResponse(response)}};
     }
 
     async destroy(id: string) {
@@ -93,7 +97,7 @@ export class UserService {
                 }
             }
 
-        let response;
+        let response, error;
         user.set(data);
         await user.save()
             .then(doc => {
@@ -101,8 +105,28 @@ export class UserService {
             })
             .catch(err => {
                 console.log(err);
+                error = err;
             });
+        if (error)
+            return {
+                status: 400,
+                data: {
+                    "error": { "message": "Unkown error", "code": 400 }
+                }
+            }
 
-        return {status: 200, data: {data: response}};
+        return {status: 200, data: {data: this.parseResponse(response)}};
+    }
+
+    private parseResponse(data) {
+        return {
+            _id: data?._id,
+            firstName: data?.firstName,
+            lastName: data?.lastName,
+            email: data?.email,
+            nickName: data?.nickName,
+            type: data?.type,
+            createdAt: data?.createdAt,
+        }
     }
 }

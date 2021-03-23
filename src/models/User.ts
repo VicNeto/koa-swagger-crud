@@ -3,7 +3,13 @@ import * as mongoose from 'mongoose';
 const userSchema = new mongoose.Schema({
     firstName: { type: String, required: true, maxLength: 50 },
     lastName: { type: String, required: true, maxLength: 50 },
-    email: { type: String, required: true, maxLength: 80 },
+    email: { 
+        type: String, 
+        index: true, 
+        unique: true,
+        maxLength: 80 
+    },
+    hash: { type: String, required: true, maxLength: 256 },
     nickName: { type: String, required: false, maxLength: 50 },
     type: { 
         type: String, 

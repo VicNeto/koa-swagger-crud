@@ -9,7 +9,7 @@ import {
 } from 'koa-swagger-decorator';
 import { Context } from 'koa';
 import { commonResponse } from '../helpers/DocHelper';
-import { UserService } from './service';
+import { UserService } from '../services/UserService';
 
 export class UserController {
     private _service: UserService;
