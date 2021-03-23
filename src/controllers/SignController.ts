@@ -7,10 +7,13 @@ import {
 import { Context } from 'koa';
 import { commonResponse } from '../helpers/DocHelper';
 import { User } from '../models/User';
-import { JWTHelper as jwt } from '../helpers/JWT';
+import { JWTHelper} from '../helpers/JWT';
 
 export class SignController {
-    constructor() {}
+    private jwt: JWTHelper;
+    constructor() {
+        this.jwt = new JWTHelper();
+    }
 
     @request('POST', '/login')
     @summary('Login')
@@ -31,15 +34,20 @@ export class SignController {
             ctx.body = {'message': 'User not found' };
             return ctx;
         }
-        const match = await jwt.sign(user.hash, ctx.request.body.password);
-        if (!match) {
+        
+        let token, error;
+        await this.jwt.sign(user, ctx.request.body.password)
+            .then(res => token = res)
+            .catch(err => {
+                console.log(err);
+                error = err;
+            });
+        if (error) {
             ctx.status = 401;
-            ctx.body = "Unauthorized";
+            ctx.body = {message: "Unauthorized", code: 401};
             return ctx;
         }
 
-        ctx.body = "Cool";
-        // ctx.status = res.status || 201;
-        // ctx.body = res.data || {};
+        ctx.body = {token: token, message: "Login succesful"};
     }
 }

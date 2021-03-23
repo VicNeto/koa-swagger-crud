@@ -1,4 +1,3 @@
-import { User } from '../models/User';
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
@@ -19,11 +18,25 @@ export class JWTHelper {
         }
     }
 
-    static async sign(hash: string, pass: string) {
-        const match = await bcrypt.compare(pass, hash);
-        return match;
-        // if(!match)
-        //     throw new Error('Unauthorized');
+    async sign(user, pass: string) {
+        const match = await bcrypt.compare(pass, user.hash);
+        
+        if(!match)
+            throw new Error('Unauthorized');
+            
+        let token = jwt.sign(
+            {
+                id: user._id.toString(), 
+                email: user.email
+            }, 
+            this._secretKey, 
+            this.signOptions
+            );
+
+        return token;
+    }
+
+    async verify() {
         
     }
 
